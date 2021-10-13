@@ -11,10 +11,18 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:hint="Name"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/etEmail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/etSurname"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:hint="Surname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etName" />
 
     <EditText
         android:id="@+id/etEmail"
@@ -23,7 +31,8 @@
         android:hint="Email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etName" />
+        app:layout_constraintTop_toBottomOf="@id/etSurname" />
+
 
     <TableLayout
         android:id="@+id/Btn"
@@ -33,19 +42,14 @@
         <TableRow
             android:id="@+id/row1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@android:dimen/app_icon_size">
             <Button
                 android:id="@+id/Add"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_margin="20dp"
                 android:text="Add" />
-            <Button
-                android:id="@+id/Read"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_margin="20dp"
-                android:text="Read" />
             <Button
                 android:id="@+id/Clear"
                 android:layout_width="100dp"
@@ -54,16 +58,16 @@
                 android:text="Clear" />
         </TableRow>
     </TableLayout>
-    <TextView
-        android:id="@+id/Output"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+
+    <TableLayout
+        android:id="@+id/dbOutput"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Btn"
-        />
-
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Btn">
+    </TableLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
