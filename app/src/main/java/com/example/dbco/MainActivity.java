@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,10 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnAdd, btnClear;
-    EditText etEmail, etName,etFam;
+    Button btnAdd, btnClear,btnBuy;
+    EditText  etName,etPrice;
+    TextView txtKort;
 
     DBHelper dbHelper;
     SQLiteDatabase database;
@@ -33,9 +34,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnClear = (Button) findViewById(R.id.Clear);
         btnClear.setOnClickListener(this);
+        btnBuy = (Button) findViewById(R.id.Buy);
+        btnBuy.setOnClickListener(this);
         etName = (EditText) findViewById(R.id.etName);
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etFam = (EditText) findViewById(R.id.etSurname);
+        etPrice = (EditText) findViewById(R.id.etPrice);
+        txtKort = (TextView) findViewById(R.id.txtSum);
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
         UpdateTable();
@@ -43,13 +46,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void UpdateTable()
     {
-        Cursor cursor = database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
+        Cursor cursor = database.query(DBHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
         if (cursor.moveToFirst())
         {
             int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
-            int nameIndex = cursor.getColumnIndex(DBHelper.KEY_NAME);
-            int emailIndex = cursor.getColumnIndex(DBHelper.KEY_MAIL);
-            int famIndex = cursor.getColumnIndex(DBHelper.KEY_FAM);
+            int nameIndex = cursor.getColumnIndex(DBHelper.KEY_PRODUCT);
+            int priceIndex = cursor.getColumnIndex(DBHelper.KEY_PRICE);
             TableLayout dbOutput = findViewById(R.id.dbOutput);
             dbOutput.removeAllViews();
             do{
@@ -72,17 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView outputFam = new TextView(this);
                 params.weight = 3.0f;
                 outputFam.setLayoutParams(params);
-                outputFam.setText(cursor.getString(famIndex));
+                outputFam.setText(cursor.getString(priceIndex));
                 dbOutputRow.addView(outputFam);
-
-                TextView outputMail = new TextView(this);
-                params.weight = 3.0f;
-                outputMail.setLayoutParams(params);
-                outputMail.setText(cursor.getString(emailIndex));
-                dbOutputRow.addView(outputMail);
-
-
-
 
                 Button deleteBtn = new Button(this);
                 deleteBtn.setOnClickListener(this);
@@ -91,7 +84,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 deleteBtn.setText("Удалить");
                 deleteBtn.setId(cursor.getInt(idIndex));
                 dbOutputRow.addView(deleteBtn);
+
+
+
+                Button buyBtn = new Button(this);
+                buyBtn.setOnClickListener(this);
+                params.weight=1.0f;
+                buyBtn.setLayoutParams(params);
+                buyBtn.setText("Купить");
+                buyBtn.setId(cursor.getInt(idIndex));
+                dbOutputRow.addView(buyBtn);
                 dbOutput.addView(dbOutputRow);
+
             }while(cursor.moveToNext());
 
         }
@@ -105,62 +109,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.Add:
                 String name = etName.getText().toString();
-                String email = etEmail.getText().toString();
-                String fam = etFam.getText().toString();
+                String price = etPrice.getText().toString();
                 contentValues = new ContentValues();
-                contentValues.put(DBHelper.KEY_NAME, name);
-                contentValues.put(DBHelper.KEY_FAM, fam);
-                contentValues.put(DBHelper.KEY_MAIL, email);
-                database.insert(DBHelper.TABLE_CONTACTS, null, contentValues);
+                contentValues.put(DBHelper.KEY_PRODUCT, name);
+                contentValues.put(DBHelper.KEY_PRICE, price);
+
+                database.insert(DBHelper.TABLE_PRODUCTS, null, contentValues);
                 etName.setText(null);
-                etFam.setText(null);
-                etEmail.setText(null);
+                etPrice.setText(null);
                 UpdateTable();
                 break;
 
             case R.id.Clear:
-                database.delete(DBHelper.TABLE_CONTACTS,null,null);
+                database.delete(DBHelper.TABLE_PRODUCTS,null,null);
                 TableLayout dbOutput = findViewById(R.id.dbOutput);
                 dbOutput.removeAllViews();
                 etName.setText(null);
-                etFam.setText(null);
-                etEmail.setText(null);
+                etPrice.setText(null);
+
                 UpdateTable();
                 break;
+            case R.id.Buy:
+
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Вы купили товаров на " + txtKort.getText().toString()+" у.е.д", Toast.LENGTH_SHORT);
+                toast.show();
+                txtKort.setText("0");
             default:
-                View outputDBRow = (View) v.getParent();
-                ViewGroup outputDB = (ViewGroup) outputDBRow.getParent();
-                outputDB.removeView(outputDBRow);
-                outputDB.invalidate();
-
-                database.delete(DBHelper.TABLE_CONTACTS,DBHelper.KEY_ID + "=?",new String[]{String.valueOf((v.getId()))});
-
-
-                contentValues = new ContentValues();
-                Cursor cursorUpdater = database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
-                if (cursorUpdater.moveToFirst()) {
-                    int idIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_ID);
-                    int nameIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_NAME);
-                    int emailIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_MAIL);
-                    int famIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_FAM);
-                    int realID = 1;
-                    do{
-                        if(cursorUpdater.getInt(idIndex)>realID)
-                        {
-                            contentValues.put(DBHelper.KEY_ID,realID);
-                            contentValues.put(DBHelper.KEY_NAME,cursorUpdater.getString(nameIndex));
-                            contentValues.put(DBHelper.KEY_MAIL,cursorUpdater.getString(emailIndex));
-                            contentValues.put(DBHelper.KEY_FAM,cursorUpdater.getString(famIndex));
-                            database.replace(DBHelper.TABLE_CONTACTS,null,contentValues);
-
-                        }
-                        realID++;
-                    }while (cursorUpdater.moveToNext());
-                    if (cursorUpdater.moveToLast() && v.getId()!=realID)
+                if(((Button) v).getText() == "Купить")
+                {
+                    Cursor cursorFind = database.query(DBHelper.TABLE_PRODUCTS,null,DBHelper.KEY_ID + "=?",new String[]{String.valueOf(v.getId())}, null, null, null);
+                    float sumBuy = Float.valueOf(txtKort.getText().toString());
+                    float sum = 0;
+                    if(cursorFind.moveToFirst())
                     {
-                        database.delete(DBHelper.TABLE_CONTACTS,DBHelper.KEY_ID+ "=?",new String[]{cursorUpdater.getString(idIndex)});
+                        int pricer = cursorFind.getColumnIndex(DBHelper.KEY_PRICE);
+                        do{
+                            sum = cursorFind.getFloat(pricer);
+                        }while(cursorFind.moveToNext());
                     }
-                    UpdateTable();
+                    cursorFind.close();
+                    sumBuy +=sum;
+                    txtKort.setText(String.valueOf(sumBuy));
+                }
+
+
+
+                if(((Button) v).getText()== "Удалить") {
+                    View outputDBRow = (View) v.getParent();
+                    ViewGroup outputDB = (ViewGroup) outputDBRow.getParent();
+                    outputDB.removeView(outputDBRow);
+                    outputDB.invalidate();
+                    database.delete(DBHelper.TABLE_PRODUCTS, DBHelper.KEY_ID + "=?", new String[]{String.valueOf((v.getId()))});
+                    contentValues = new ContentValues();
+                    Cursor cursorUpdater = database.query(DBHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
+                    if (cursorUpdater.moveToFirst()) {
+                        int idIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_ID);
+                        int nameIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRODUCT);
+                        int priceIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRICE);
+                        int realID = 1;
+                        do {
+                            if (cursorUpdater.getInt(idIndex) > realID) {
+                                contentValues.put(DBHelper.KEY_ID, realID);
+                                contentValues.put(DBHelper.KEY_PRODUCT, cursorUpdater.getString(nameIndex));
+                                contentValues.put(DBHelper.KEY_PRICE, cursorUpdater.getString(priceIndex));
+                                database.replace(DBHelper.TABLE_PRODUCTS, null, contentValues);
+
+                            }
+                            realID++;
+                        } while (cursorUpdater.moveToNext());
+                        if (cursorUpdater.moveToLast() && v.getId() != realID) {
+                            database.delete(DBHelper.TABLE_PRODUCTS, DBHelper.KEY_ID + "=?", new String[]{cursorUpdater.getString(idIndex)});
+                        }
+                        UpdateTable();
+                    }
+
                 }
                 break;
         }

@@ -5,57 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/txtTrash"
+        android:layout_width="70dp"
+        android:layout_height="0dp"
+        android:text="Корзина:"
+        app:layout_constraintEnd_toStartOf="@id/txtSum"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+    <TextView
+        android:id="@+id/txtSum"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
     <EditText
         android:id="@+id/etName"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:hint="Name"
-        app:layout_constraintBottom_toTopOf="@id/etEmail"
+        android:hint="Product"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSum"
+        />
     <EditText
-        android:id="@+id/etSurname"
+        android:id="@+id/etPrice"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:hint="Surname"
+        android:hint="Price"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etName" />
-
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:hint="Email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etSurname" />
 
 
     <TableLayout
         android:id="@+id/Btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/etEmail">
+        app:layout_constraintTop_toBottomOf="@id/etPrice"
+        tools:layout_editor_absoluteY="200dp">
+
         <TableRow
             android:id="@+id/row1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="@android:dimen/app_icon_size">
+           >
+
             <Button
                 android:id="@+id/Add"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_margin="20dp"
                 android:text="Add" />
+
             <Button
                 android:id="@+id/Clear"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_margin="20dp"
                 android:text="Clear" />
+            <Button
+                android:id="@+id/Buy"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="20dp"
+                android:text="Buy" />
         </TableRow>
     </TableLayout>
 
