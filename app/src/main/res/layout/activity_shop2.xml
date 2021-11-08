@@ -5,60 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/txtTrash"
+        android:layout_width="70dp"
+        android:layout_height="0dp"
+        android:text="Корзина:"
+        app:layout_constraintEnd_toStartOf="@id/txtSum"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:hint="Product"
+    <TextView
+        android:id="@+id/txtSum"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:text="0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/etPrice"/>
-
-    <EditText
-        android:id="@+id/etPrice"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:hint="Price"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etName" />
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
 
     <TableLayout
         android:id="@+id/Btn"
+        app:layout_constraintTop_toBottomOf="@+id/txtSum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/etPrice"
-        tools:layout_editor_absoluteY="200dp">
+        tools:layout_editor_absoluteY="119dp">
 
         <TableRow
             android:id="@+id/row1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           >
+            android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/Add"
+                android:id="@+id/Buy"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_margin="20dp"
-                android:text="Add" />
+                android:text="Buy" />
 
             <Button
-                android:id="@+id/Clear"
+                android:id="@+id/Back"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_margin="20dp"
-                android:text="Clear" />
+                android:text="Back" />
 
-            <Button
-                android:id="@+id/newPg"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_margin="20dp"
-                android:text="Store" />
+
         </TableRow>
     </TableLayout>
 

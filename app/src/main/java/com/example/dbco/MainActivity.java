@@ -3,6 +3,7 @@ package com.example.dbco;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,9 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnAdd, btnClear,btnBuy;
+    Button btnAdd, btnClear,btnGoPg;
     EditText  etName,etPrice;
-    TextView txtKort;
 
     DBHelper dbHelper;
     SQLiteDatabase database;
@@ -34,11 +34,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnClear = (Button) findViewById(R.id.Clear);
         btnClear.setOnClickListener(this);
-        btnBuy = (Button) findViewById(R.id.Buy);
-        btnBuy.setOnClickListener(this);
+        btnGoPg = (Button) findViewById(R.id.newPg);
+        btnGoPg.setOnClickListener(this);
         etName = (EditText) findViewById(R.id.etName);
         etPrice = (EditText) findViewById(R.id.etPrice);
-        txtKort = (TextView) findViewById(R.id.txtSum);
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
         UpdateTable();
@@ -87,13 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-                Button buyBtn = new Button(this);
-                buyBtn.setOnClickListener(this);
-                params.weight=1.0f;
-                buyBtn.setLayoutParams(params);
-                buyBtn.setText("Купить");
-                buyBtn.setId(cursor.getInt(idIndex));
-                dbOutputRow.addView(buyBtn);
+
                 dbOutput.addView(dbOutputRow);
 
             }while(cursor.moveToNext());
@@ -129,32 +122,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 UpdateTable();
                 break;
-            case R.id.Buy:
-
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Вы купили товаров на " + txtKort.getText().toString()+" у.е.д", Toast.LENGTH_SHORT);
-                toast.show();
-                txtKort.setText("0");
+            case R.id.newPg:
+                Intent intent = new Intent(this, ShopActivity2.class);
+                startActivity(intent);
+                break;
             default:
-                if(((Button) v).getText() == "Купить")
-                {
-                    Cursor cursorFind = database.query(DBHelper.TABLE_PRODUCTS,null,DBHelper.KEY_ID + "=?",new String[]{String.valueOf(v.getId())}, null, null, null);
-                    float sumBuy = Float.valueOf(txtKort.getText().toString());
-                    float sum = 0;
-                    if(cursorFind.moveToFirst())
-                    {
-                        int pricer = cursorFind.getColumnIndex(DBHelper.KEY_PRICE);
-                        do{
-                            sum = cursorFind.getFloat(pricer);
-                        }while(cursorFind.moveToNext());
-                    }
-                    cursorFind.close();
-                    sumBuy +=sum;
-                    txtKort.setText(String.valueOf(sumBuy));
-                }
-
-
-
                 if(((Button) v).getText()== "Удалить") {
                     View outputDBRow = (View) v.getParent();
                     ViewGroup outputDB = (ViewGroup) outputDBRow.getParent();
