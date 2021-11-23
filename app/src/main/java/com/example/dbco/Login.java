@@ -56,6 +56,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             {
                                 if(etLog.getText().toString().equals("Admin") &&  etPass.getText().toString().equals("Admin"))
                                 {
+
                                     startActivity(new Intent(this, MainActivity.class));
                                     check = true;
                                     break;
