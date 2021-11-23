@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DbCo">
         <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
             android:name=".ShopActivity2"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
